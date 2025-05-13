@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zákon Ohma</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f0f4f8;
+      color: #2c3e50;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      color: #1d3557;
+    }
+    p {
+      font-size: 1.1rem;
+    }
+    .graph {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    svg {
+      background: #eef6fb;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+    }
+    .note {
+      margin-top: 2rem;
+      background-color: #e8f5e9;
+      border-left: 5px solid #66bb6a;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔌 Zákon Ohma: I = U / R</h1>
+    <p>Podľa zákona Ohma je elektrický prúd <strong>I</strong> priamo úmerný napätiu <strong>U</strong> a nepriamo úmerný odporu <strong>R</strong>.</p>
+    <p>Na grafe nižšie je znázornená závislosť prúdu od napätia pri konštantnom odpore <strong>R = 2&nbsp;Ω</strong>.</p>
+
+    <div class="graph">
+      <svg width="500" height="300" viewBox="0 0 500 300">
+        <!-- Оси -->
+        <line x1="50" y1="250" x2="450" y2="250" stroke="#333" stroke-width="2" />
+        <line x1="50" y1="250" x2="50" y2="50" stroke="#333" stroke-width="2" />
+        <!-- Подписи -->
+        <text x="455" y="255" font-size="14">U (V)</text>
+        <text x="10" y="60" font-size="14">I (A)</text>
+
+        <!-- Линия I = U / R при R = 2 -->
+        <polyline fill="none" stroke="#1e88e5" stroke-width="3" points="
+          50,250
+          100,225
+          150,200
+          200,175
+          250,150
+          300,125
+          350,100
+          400,75
+          450,50
+        " />
+
+        <!-- Маркеры -->
+        <circle cx="100" cy="225" r="4" fill="#1e88e5"/>
+        <circle cx="200" cy="175" r="4" fill="#1e88e5"/>
+        <circle cx="300" cy="125" r="4" fill="#1e88e5"/>
+        <circle cx="400" cy="75"  r="4" fill="#1e88e5"/>
+      </svg>
+    </div>
+
+    <div class="note">
+      <strong>Príklad:</strong><br>
+      Ak napätie <strong>U = 6 V</strong> a odpor <strong>R = 2 Ω</strong>, potom prúd je <strong>I = 6 / 2 = 3 A</strong>.
+    </div>
+  </div>
+</body>
+</html>
