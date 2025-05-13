@@ -105,85 +105,89 @@
     </div>
   </div>
 
-  <script>
-    const canvas = document.getElementById("graph");
-    const ctx = canvas.getContext("2d");
-    const voltageInput = document.getElementById("voltage");
-    const resistanceInput = document.getElementById("resistance");
-    const info = document.getElementById("info");
+ <script>
+  const voltageInput = document.getElementById("voltage");
+  const resistanceInput = document.getElementById("resistance");
+  const canvas = document.getElementById("graph");
+  const ctx = canvas.getContext("2d");
+  const info = document.getElementById("info");
 
-    function drawGraph() {
-      const maxU = parseFloat(voltageInput.value);
-      const R = parseFloat(resistanceInput.value);
+  function drawGraph() {
+    const maxU = parseFloat(voltageInput.value);
+    const R = parseFloat(resistanceInput.value);
 
-      if (R <= 0 || isNaN(R) || isNaN(maxU)) {
-        info.innerHTML = `⚠️ Odpor musí byť väčší ako 0 Ω a napätie musí byť číslo.`;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        return;
-      }
-
-      const maxI = maxU / R;
-
-      // Очистить холст
+    if (R <= 0 || isNaN(R) || isNaN(maxU)) {
+      info.innerHTML = `⚠️ Odpor musí byť väčší ako 0 Ω a napätie musí byť číslo.`;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Сетка
-      ctx.strokeStyle = "#d0d0d0";
-      ctx.lineWidth = 1;
-      for (let i = 0; i <= 10; i++) {
-        let x = 50 + (i * 60);
-        let y = 350 - (i * 30);
-        ctx.beginPath();
-        ctx.moveTo(x, 350);
-        ctx.lineTo(x, 50);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(50, y);
-        ctx.lineTo(650, y);
-        ctx.stroke();
-      }
-
-      // Оси
-      ctx.strokeStyle = "#444";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(50, 350);
-      ctx.lineTo(650, 350);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(50, 350);
-      ctx.lineTo(50, 50);
-      ctx.stroke();
-
-      // Подписи осей
-      ctx.fillStyle = "#000";
-      ctx.font = "bold 14px Segoe UI";
-      ctx.fillText("U (V)", 660, 360);
-      ctx.fillText("I (A)", 20, 40);
-
-      // График
-      ctx.strokeStyle = "#1976d2";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-
-      for (let u = 0; u <= maxU; u += 0.1) {
-        let i = u / R;
-        let x = 50 + (u / maxU) * 600;
-        let y = 350 - (i / maxI) * 300;
-        if (u === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-
-      ctx.stroke();
-
-      const exampleI = (maxU / R).toFixed(2);
-      info.innerHTML = `Pri <strong>U = ${maxU} V</strong> a <strong>R = ${R} Ω</strong> bude <strong>I = ${exampleI} A</strong>.`;
+      return;
     }
 
-    voltageInput.addEventListener("input", drawGraph);
-    resistanceInput.addEventListener("input", drawGraph);
+    const maxI = maxU / R;
 
-    drawGraph(); // стартовое отображение
-  </script>
+    // Очистить
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Сетка и оси
+    ctx.strokeStyle = "#bbb";
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 10; i++) {
+      let x = 50 + (i * 60);
+      let y = 350 - (i * 30);
+      ctx.beginPath();
+      ctx.moveTo(x, 350);
+      ctx.lineTo(x, 50);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(50, y);
+      ctx.lineTo(650, y);
+      ctx.stroke();
+    }
+
+    // Оси
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(50, 350);
+    ctx.lineTo(650, 350);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(50, 350);
+    ctx.lineTo(50, 50);
+    ctx.stroke();
+
+    // Подписи осей
+    ctx.fillStyle = "#000";
+    ctx.font = "14px sans-serif";
+    ctx.fillText("U (V)", 660, 360);
+    ctx.fillText("I (A)", 20, 40);
+
+    // Линия графика
+    ctx.strokeStyle = "#1e88e5";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+
+    for (let u = 0; u <= maxU; u += 0.1) {
+      let i = u / R;
+      let x = 50 + (u / maxU) * 600;
+      let y = 350 - (i / maxI) * 300;
+      if (u === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+
+    ctx.stroke();
+
+    // Обновить информацию
+    const exampleI = (maxU / R).toFixed(2);
+    info.innerHTML = `Pri <strong>U = ${maxU} V</strong> a <strong>R = ${R} Ω</strong> bude <strong>I = ${exampleI} A</strong>.`;
+  }
+
+  // Обработчики событий
+  voltageInput.addEventListener("input", drawGraph);
+  resistanceInput.addEventListener("input", drawGraph);
+
+  // Нарисовать график при загрузке
+  window.addEventListener("DOMContentLoaded", drawGraph);
+</script>
+
 </body>
 </html>
