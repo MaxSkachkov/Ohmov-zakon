@@ -1,4 +1,4 @@
-# Ohmov zákon
+# Ohm's Law Graph
 ⚡ Interactive Ohm's Law Graph – Pure HTML, CSS & JavaScript
 This standalone HTML file (no external libraries) allows you to:
 
