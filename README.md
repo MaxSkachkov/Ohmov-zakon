@@ -1,13 +1,6 @@
 # Ohm's Law Graph
-⚡ Interactive Ohm's Law Graph – Pure HTML, CSS & JavaScript
-This standalone HTML file (no external libraries) allows you to:
+Ohmov zákon – jednoduchá kalkulačka
+Interaktívna webová stránka na výpočet elektrického napätia (U), prúdu (I) alebo odporu (R) podľa Ohmovho zákona. Stačí zadať dve známe hodnoty a kalkulačka spočíta tretiu. Užitočný nástroj pre študentov, učiteľov aj technikov.
 
-Input voltage (U) and resistance (R),
-
-Automatically calculate the current (I) using the formula I = U / R,
-
-Dynamically draw the I(U) graph (current as a function of voltage),
-
-All done using pure HTML, CSS, and JavaScript – no dependencies or internet required.
-
-Perfect for educational use or quick interactive demos of Ohm’s Law. Just open the file in any browser and explore the relationship between voltage, resistance, and current in real time.
+Ohm's Law – Simple Calculator
+An interactive web tool for calculating voltage (U), current (I), or resistance (R) using Ohm’s Law. Enter any two known values, and the calculator finds the third. A handy resource for students, teachers, and technicians.
