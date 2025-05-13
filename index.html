@@ -2,55 +2,86 @@
 <html lang="sk">
 <head>
   <meta charset="UTF-8">
-  <title>Interaktívny graf – Zákon Ohma</title>
+  <title>🔌 Zákon Ohma – Interaktívny graf</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: "Segoe UI", sans-serif;
-      background: #f0f4f8;
+      background: linear-gradient(to bottom, #e0f7fa, #ffffff);
       padding: 2rem;
+      margin: 0;
       color: #2c3e50;
     }
+
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: auto;
-      background: white;
+      background: #fff;
       padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+      border-radius: 18px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
     }
+
     h1 {
       text-align: center;
-      color: #1d3557;
+      color: #0d47a1;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
     }
+
     .controls {
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
-      margin: 1.5rem 0;
+      gap: 1.5rem;
+      justify-content: space-between;
+      margin-bottom: 2rem;
     }
+
     label {
-      flex: 1;
-      min-width: 180px;
+      flex: 1 1 250px;
+      display: flex;
+      flex-direction: column;
+      font-weight: 500;
     }
+
     input {
-      width: 100%;
-      padding: 0.5rem;
-      border-radius: 8px;
+      padding: 0.75rem;
+      border-radius: 10px;
       border: 1px solid #ccc;
       font-size: 1rem;
+      margin-top: 0.5rem;
+      transition: border 0.3s;
     }
+
+    input:focus {
+      outline: none;
+      border-color: #1976d2;
+    }
+
     canvas {
-      border: 1px solid #ccc;
-      background-color: #eef6fb;
+      width: 100%;
+      height: auto;
+      border: 1px solid #ddd;
+      background-color: #f1f9ff;
       border-radius: 12px;
-      margin-top: 1rem;
     }
+
     .note {
       margin-top: 1.5rem;
       background-color: #e8f5e9;
-      border-left: 5px solid #66bb6a;
+      border-left: 6px solid #4caf50;
       padding: 1rem;
-      border-radius: 8px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 600px) {
+      .controls {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -75,75 +106,84 @@
   </div>
 
   <script>
-function drawGraph() {
-  const maxU = parseFloat(voltageInput.value);
-  const R = parseFloat(resistanceInput.value);
+    const canvas = document.getElementById("graph");
+    const ctx = canvas.getContext("2d");
+    const voltageInput = document.getElementById("voltage");
+    const resistanceInput = document.getElementById("resistance");
+    const info = document.getElementById("info");
 
-  if (R <= 0 || isNaN(R) || isNaN(maxU)) {
-    info.innerHTML = `⚠️ Odpor musí byť väčší ako 0 Ω a napätie musí byť číslo.`;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    return;
-  }
+    function drawGraph() {
+      const maxU = parseFloat(voltageInput.value);
+      const R = parseFloat(resistanceInput.value);
 
-  const maxI = maxU / R;
+      if (R <= 0 || isNaN(R) || isNaN(maxU)) {
+        info.innerHTML = `⚠️ Odpor musí byť väčší ako 0 Ω a napätie musí byť číslo.`;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
 
-  // Очистить
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const maxI = maxU / R;
 
-  // Сетка и оси
-  ctx.strokeStyle = "#bbb";
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= 10; i++) {
-    let x = 50 + (i * 60);
-    let y = 350 - (i * 30);
-    ctx.beginPath();
-    ctx.moveTo(x, 350);
-    ctx.lineTo(x, 50);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(50, y);
-    ctx.lineTo(650, y);
-    ctx.stroke();
-  }
+      // Очистить холст
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Оси
-  ctx.strokeStyle = "#000";
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(50, 350);
-  ctx.lineTo(650, 350);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(50, 350);
-  ctx.lineTo(50, 50);
-  ctx.stroke();
+      // Сетка
+      ctx.strokeStyle = "#d0d0d0";
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 10; i++) {
+        let x = 50 + (i * 60);
+        let y = 350 - (i * 30);
+        ctx.beginPath();
+        ctx.moveTo(x, 350);
+        ctx.lineTo(x, 50);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(50, y);
+        ctx.lineTo(650, y);
+        ctx.stroke();
+      }
 
-  // Подписи осей
-  ctx.fillStyle = "#000";
-  ctx.font = "14px sans-serif";
-  ctx.fillText("U (V)", 660, 360);
-  ctx.fillText("I (A)", 20, 40);
+      // Оси
+      ctx.strokeStyle = "#444";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(50, 350);
+      ctx.lineTo(650, 350);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(50, 350);
+      ctx.lineTo(50, 50);
+      ctx.stroke();
 
-  // Линия графика
-  ctx.strokeStyle = "#1e88e5";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
+      // Подписи осей
+      ctx.fillStyle = "#000";
+      ctx.font = "bold 14px Segoe UI";
+      ctx.fillText("U (V)", 660, 360);
+      ctx.fillText("I (A)", 20, 40);
 
-  for (let u = 0; u <= maxU; u += 0.1) {
-    let i = u / R;
-    let x = 50 + (u / maxU) * 600;
-    let y = 350 - (i / maxI) * 300;
-    if (u === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  }
+      // График
+      ctx.strokeStyle = "#1976d2";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
 
-  ctx.stroke();
+      for (let u = 0; u <= maxU; u += 0.1) {
+        let i = u / R;
+        let x = 50 + (u / maxU) * 600;
+        let y = 350 - (i / maxI) * 300;
+        if (u === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
 
-  // Обновить информацию
-  const exampleI = (maxU / R).toFixed(2);
-  info.innerHTML = `Pri <strong>U = ${maxU} V</strong> a <strong>R = ${R} Ω</strong> bude <strong>I = ${exampleI} A</strong>.`;
-}
+      ctx.stroke();
 
+      const exampleI = (maxU / R).toFixed(2);
+      info.innerHTML = `Pri <strong>U = ${maxU} V</strong> a <strong>R = ${R} Ω</strong> bude <strong>I = ${exampleI} A</strong>.`;
+    }
+
+    voltageInput.addEventListener("input", drawGraph);
+    resistanceInput.addEventListener("input", drawGraph);
+
+    drawGraph(); // стартовое отображение
   </script>
 </body>
 </html>
