@@ -1,193 +1,135 @@
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8">
-  <title>🔌 Zákon Ohma – Interaktívny graf</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ohmov zákon</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(to bottom, #e0f7fa, #ffffff);
-      padding: 2rem;
-      margin: 0;
-      color: #2c3e50;
+      font-family: Arial, sans-serif;
+      margin: 2em;
+      background: #f4f4f4;
     }
-
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background: #fff;
-      padding: 2rem;
-      border-radius: 18px;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-    }
-
     h1 {
       text-align: center;
-      color: #0d47a1;
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
     }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      justify-content: space-between;
-      margin-bottom: 2rem;
+    form {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 2em;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
     label {
-      flex: 1 1 250px;
-      display: flex;
-      flex-direction: column;
-      font-weight: 500;
+      display: block;
+      margin-top: 1em;
     }
-
-    input {
-      padding: 0.75rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-      margin-top: 0.5rem;
-      transition: border 0.3s;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: #1976d2;
-    }
-
-    canvas {
+    input, select {
       width: 100%;
-      height: auto;
-      border: 1px solid #ddd;
-      background-color: #f1f9ff;
-      border-radius: 12px;
+      padding: 0.5em;
+      margin-top: 0.3em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
-
-    .note {
-      margin-top: 1.5rem;
-      background-color: #e8f5e9;
-      border-left: 6px solid #4caf50;
-      padding: 1rem;
-      border-radius: 10px;
-      font-size: 1.1rem;
+    button {
+      margin-top: 1.5em;
+      width: 100%;
+      padding: 0.7em;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
     }
-
-    @media (max-width: 600px) {
-      .controls {
-        flex-direction: column;
-      }
+    button:hover {
+      background: #0056b3;
+    }
+    .result {
+      text-align: center;
+      margin-top: 1.5em;
+      font-size: 1.2em;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🔌 Zákon Ohma – Interaktívny graf</h1>
-    <div class="controls">
-      <label>
-        Maximálne napätie U (V):
-        <input type="number" id="voltage" value="10" min="1" max="100" />
-      </label>
-      <label>
-        Odpor R (Ω):
-        <input type="number" id="resistance" value="2" min="0.1" step="0.1" />
-      </label>
+  <h1>Ohmov zákon</h1>
+  <form id="ohmsLawForm">
+    <label for="calculate">Čo chceš vypočítať?</label>
+    <select id="calculate" name="calculate">
+      <option value="U">Napätie (U)</option>
+      <option value="I">Prúd (I)</option>
+      <option value="R">Odpor (R)</option>
+    </select>
+
+    <div id="input1Container">
+      <label for="input1">Prúd (I) v ampéroch:</label>
+      <input type="number" id="input1" name="input1" step="any" required>
     </div>
-    <canvas id="graph" width="700" height="400"></canvas>
 
-    <div class="note" id="info">
-      Pri <strong>U = 10 V</strong> a <strong>R = 2 Ω</strong> bude <strong>I = 5 A</strong>.
+    <div id="input2Container">
+      <label for="input2">Odpor (R) v ohmoch:</label>
+      <input type="number" id="input2" name="input2" step="any" required>
     </div>
-  </div>
 
- <script>
-  const voltageInput = document.getElementById("voltage");
-  const resistanceInput = document.getElementById("resistance");
-  const canvas = document.getElementById("graph");
-  const ctx = canvas.getContext("2d");
-  const info = document.getElementById("info");
+    <button type="submit">Vypočítať</button>
+    <div class="result" id="result"></div>
+  </form>
 
-  function drawGraph() {
-    const maxU = parseFloat(voltageInput.value);
-    const R = parseFloat(resistanceInput.value);
+  <script>
+    const form = document.getElementById('ohmsLawForm');
+    const calculate = document.getElementById('calculate');
+    const input1 = document.getElementById('input1');
+    const input2 = document.getElementById('input2');
+    const input1Container = document.getElementById('input1Container');
+    const input2Container = document.getElementById('input2Container');
+    const result = document.getElementById('result');
 
-    if (R <= 0 || isNaN(R) || isNaN(maxU)) {
-      info.innerHTML = `⚠️ Odpor musí byť väčší ako 0 Ω a napätie musí byť číslo.`;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      return;
+    function updateLabels() {
+      const what = calculate.value;
+      if (what === 'U') {
+        input1Container.querySelector('label').textContent = 'Prúd (I) v ampéroch:';
+        input2Container.querySelector('label').textContent = 'Odpor (R) v ohmoch:';
+      } else if (what === 'I') {
+        input1Container.querySelector('label').textContent = 'Napätie (U) vo voltoch:';
+        input2Container.querySelector('label').textContent = 'Odpor (R) v ohmoch:';
+      } else if (what === 'R') {
+        input1Container.querySelector('label').textContent = 'Napätie (U) vo voltoch:';
+        input2Container.querySelector('label').textContent = 'Prúd (I) v ampéroch:';
+      }
+      input1.value = '';
+      input2.value = '';
+      result.textContent = '';
     }
 
-    const maxI = maxU / R;
+    calculate.addEventListener('change', updateLabels);
+    updateLabels();
 
-    // Очистить
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const val1 = parseFloat(input1.value);
+      const val2 = parseFloat(input2.value);
+      let output = '';
 
-    // Сетка и оси
-    ctx.strokeStyle = "#bbb";
-    ctx.lineWidth = 1;
-    for (let i = 0; i <= 10; i++) {
-      let x = 50 + (i * 60);
-      let y = 350 - (i * 30);
-      ctx.beginPath();
-      ctx.moveTo(x, 350);
-      ctx.lineTo(x, 50);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(50, y);
-      ctx.lineTo(650, y);
-      ctx.stroke();
-    }
-
-    // Оси
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(50, 350);
-    ctx.lineTo(650, 350);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(50, 350);
-    ctx.lineTo(50, 50);
-    ctx.stroke();
-
-    // Подписи осей
-    ctx.fillStyle = "#000";
-    ctx.font = "14px sans-serif";
-    ctx.fillText("U (V)", 660, 360);
-    ctx.fillText("I (A)", 20, 40);
-
-    // Линия графика
-    ctx.strokeStyle = "#1e88e5";
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-
-    for (let u = 0; u <= maxU; u += 0.1) {
-      let i = u / R;
-      let x = 50 + (u / maxU) * 600;
-      let y = 350 - (i / maxI) * 300;
-      if (u === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-
-    ctx.stroke();
-
-    // Обновить информацию
-    const exampleI = (maxU / R).toFixed(2);
-    info.innerHTML = `Pri <strong>U = ${maxU} V</strong> a <strong>R = ${R} Ω</strong> bude <strong>I = ${exampleI} A</strong>.`;
-  }
-
-  // Обработчики событий
-  voltageInput.addEventListener("input", drawGraph);
-  resistanceInput.addEventListener("input", drawGraph);
-
-  // Нарисовать график при загрузке
-  window.addEventListener("DOMContentLoaded", drawGraph);
-</script>
-
+      if (calculate.value === 'U') {
+        output = `Napätie U = ${val1 * val2} V`;
+      } else if (calculate.value === 'I') {
+        if (val2 === 0) {
+          output = 'Chyba: delenie nulou!';
+        } else {
+          output = `Prúd I = ${val1 / val2} A`;
+        }
+      } else if (calculate.value === 'R') {
+        if (val2 === 0) {
+          output = 'Chyba: delenie nulou!';
+        } else {
+          output = `Odpor R = ${val1 / val2} Ω`;
+        }
+      }
+      result.textContent = output;
+    });
+  </script>
 </body>
 </html>
